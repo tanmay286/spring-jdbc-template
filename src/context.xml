@@ -1,0 +1,44 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:context="http://www.springframework.org/schema/context"
+   xmlns:util="http://www.springframework.org/schema/util"
+   xmlns:p="http://www.springframework.org/schema/p"
+   xmlns:tx="http://www.springframework.org/schema/tx"
+   xsi:schemaLocation="http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd 
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/util
+ 	http://www.springframework.org/schema/util/spring-util.xsd
+        http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<bean id = "dataSource" class = "org.springframework.jdbc.datasource.DriverManagerDataSource">
+   		<property name = "driverClassName" value = "com.mysql.jdbc.Driver"/>
+   		<property name = "url" value = "jdbc:mysql://localhost:3306/bankappdb"/>
+   		<property name = "username" value = "root"/>
+   		<property name = "password" value = "root"/>
+	</bean>
+
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">  
+		<property name="dataSource" ref="dataSource"></property>  
+	</bean>
+
+	<bean id = "bankAccountDaoImpl" class = "com.capgemini.bankapp.dao.impl.BankAccountDaoImpl">
+		<property name = "jdbcTemplate" ref="jdbcTemplate"/>
+	</bean>
+
+	<bean id = "bankAccountServiceImpl" class = "com.capgemini.bankapp.service.impl.BankAccountServiceImpl">
+		<constructor-arg ref="bankAccountDaoImpl"/>
+	</bean>
+	
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+	
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">    
+		<property name="dataSource"  ref="dataSource" />  
+	</bean>
+
+<!--	<bean id = "bankAccount" class = "com.capgemini.bankapp.model.BankAccount" />-->
+
+
+</beans>
